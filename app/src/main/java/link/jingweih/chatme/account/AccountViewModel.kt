@@ -7,7 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import link.jingweih.chatme.profile.Profile
+import link.jingweih.chatme.domain.Profile
+import link.jingweih.chatme.responses.toDomainO
+import link.jingweih.chatme.usecase.LogoutUseCase
 import link.jingweih.chatme.usecase.UpdateUserProfileUseCase
 import link.jingweih.chatme.usecase.UseProfile
 import link.jingweih.jingwei.core.framework.domain.Result
@@ -16,7 +18,8 @@ import javax.inject.Inject
 @HiltViewModel
 class AccountViewModel @Inject constructor(
     private val updateUserProfileUseCase: UpdateUserProfileUseCase,
-    private val auth: FirebaseAuth
+    private val logoutUseCase: LogoutUseCase,
+    auth: FirebaseAuth
 ) : ViewModel() {
 
     private val _accountUiState = MutableLiveData<AccountUiState>()
@@ -25,10 +28,9 @@ class AccountViewModel @Inject constructor(
     init {
         auth.currentUser?.let {
             _accountUiState.value = AccountUiState.Success(
-                profile = Profile.fromFirebaseUser(it)
+                profile = it.toDomainO(true)
             )
         }
-
     }
 
     fun saveProfile(displayName: String, photoUri: String) {
@@ -41,16 +43,21 @@ class AccountViewModel @Inject constructor(
                     AccountUiState.Failure(result.exception.message)
             }
         }
-
     }
 
     fun logout() {
-        auth.signOut()
+        viewModelScope.launch {
+            when (val result = logoutUseCase(Unit)) {
+                is Result.Success -> _accountUiState.value = AccountUiState.Logout
+                is Result.Error -> _accountUiState.value =
+                    AccountUiState.Failure(result.exception.message)
+            }
+        }
     }
-
 }
 
 sealed class AccountUiState {
     data class Success(val profile: Profile) : AccountUiState()
     data class Failure(val error: String?) : AccountUiState()
+    object Logout : AccountUiState()
 }

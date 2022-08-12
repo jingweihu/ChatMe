@@ -41,7 +41,7 @@ android {
 
 dependencies {
 
-    def commonVersion = "1.0.4"
+    def commonVersion = "1.0.5"
     debugImplementation("link.jingweih.android:flipper:${commonVersion}")
     releaseImplementation("link.jingweih.android:flipper-no-op:${commonVersion}")
     implementation("link.jingweih.android:identity:${commonVersion}")
@@ -52,6 +52,8 @@ dependencies {
     // Firebase
     def firebaseVersion = "20.1.1"
     implementation("com.google.firebase:firebase-auth-ktx:${firebaseVersion}")
+    implementation("com.google.firebase:firebase-functions-ktx:20.1.0")
+    implementation("com.google.firebase:firebase-firestore-ktx:24.1.1")
 
     // Dagger
     def hiltVersion = "2.40"
@@ -63,7 +65,6 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:${navigationVersion}"
     implementation "androidx.navigation:navigation-fragment-ktx:${navigationVersion}"
 
-
     // Glide
     def glideVersion = "4.13.0"
     implementation "com.github.bumptech.glide:glide:${glideVersion}"
@@ -74,12 +75,13 @@ dependencies {
     kapt "androidx.room:room-compiler:$roomVersion"
     implementation "androidx.room:room-ktx:$roomVersion"
 
-
     def lifecycle_version = "2.4.1"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
 
+    // Gson
+    implementation 'com.google.code.gson:gson:2.9.0'
 
     implementation 'androidx.core:core-ktx:1.8.0'
     implementation 'androidx.appcompat:appcompat:1.4.2'

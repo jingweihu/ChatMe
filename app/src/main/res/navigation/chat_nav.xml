@@ -8,5 +8,26 @@
         android:id="@+id/threadsFragment"
         android:name="link.jingweih.chatme.thread.ThreadsFragment"
         android:label="@string/chat"
-        tools:layout="@layout/fragment_threads" />
+        tools:layout="@layout/fragment_threads" >
+        <action
+            android:id="@+id/action_threadsFragment_to_createThreadFragment"
+            app:destination="@id/createThreadFragment" />
+        <action
+            android:id="@+id/action_threadsFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/createThreadFragment"
+        android:name="link.jingweih.chatme.thread.create.CreateThreadFragment"
+        android:label="fragment_create_thread"
+        tools:layout="@layout/fragment_create_thread" />
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="link.jingweih.chatme.chat.ChatFragment"
+        android:label="fragment_chat"
+        tools:layout="@layout/fragment_chat" >
+        <argument
+            android:name="chatThreadWithMembers"
+            app:argType="link.jingweih.chatme.domain.ChatThreadWithMembers" />
+    </fragment>
 </navigation>

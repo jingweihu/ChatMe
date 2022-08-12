@@ -28,7 +28,13 @@ class AccountFragment : BaseFragment<FragmentAccountBinding>() {
                 is AccountUiState.Success -> {
                     binding.displayName.setText(uiState.profile.displayName)
                     binding.email.text = uiState.profile.email
-                    Glide.with(this).load(uiState.profile.photoUrl).into(binding.photoImage)
+                    Glide.with(this).load(uiState.profile.photoURL).into(binding.photoImage)
+                }
+                is AccountUiState.Logout -> {
+                    activity?.apply {
+                        startActivity(Intent(this, SplashActivity::class.java))
+                        finish()
+                    }
                 }
                 is AccountUiState.Failure -> {
                     toast(message = uiState.error ?: "Unknown error")
@@ -50,10 +56,6 @@ class AccountFragment : BaseFragment<FragmentAccountBinding>() {
 
         binding.logout.setOnClickListener {
             viewModel.logout()
-            activity?.apply {
-                startActivity(Intent(this, SplashActivity::class.java))
-                finish()
-            }
         }
     }
 }

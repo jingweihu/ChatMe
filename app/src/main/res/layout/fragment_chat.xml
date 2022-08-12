@@ -20,6 +20,9 @@
                 style="@style/Widget.MaterialComponents.Toolbar.PrimarySurface"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                app:navigationIconTint="@color/white"
+                app:navigationIcon="@drawable/ic_baseline_close_24"
+                app:titleCentered="true"
                 app:title="@string/chat" />
 
         </com.google.android.material.appbar.AppBarLayout>

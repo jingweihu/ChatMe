@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context=".thread.create.CreateThreadFragment"
+    android:padding="@dimen/margin_16_dp">
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/friendEmail"
+        android:imeOptions="actionNext"
+        android:singleLine="true"
+        android:hint="@string/create_thread_hint"/>
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/submit"
+        android:background="@color/purple_500"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/submit"/>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

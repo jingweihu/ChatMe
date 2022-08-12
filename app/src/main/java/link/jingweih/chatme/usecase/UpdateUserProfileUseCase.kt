@@ -3,8 +3,9 @@ package link.jingweih.chatme.usecase
 import android.net.Uri
 import com.google.firebase.auth.ktx.userProfileChangeRequest
 import kotlinx.coroutines.CoroutineDispatcher
-import link.jingweih.chatme.profile.Profile
+import link.jingweih.chatme.domain.Profile
 import link.jingweih.chatme.repository.AccountRepository
+import link.jingweih.chatme.responses.toDomainO
 import link.jingweih.jingwei.core.framework.concurrent.IODispatcher
 import link.jingweih.jingwei.core.framework.domain.BaseUseCase
 import javax.inject.Inject
@@ -19,7 +20,7 @@ class UpdateUserProfileUseCase @Inject constructor(
             displayName = input.displayName
             photoUri = Uri.parse(input.photoUri)
         }
-        return Profile.fromFirebaseUser(accountRepository.updateProfile(request))
+        return accountRepository.updateProfile(request).toDomainO(true)
     }
 }
 
