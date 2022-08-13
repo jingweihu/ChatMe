@@ -1,7 +1,6 @@
 package link.jingweih.chatme.responses
 
 import com.google.firebase.Timestamp
-import com.google.gson.annotations.SerializedName
 import link.jingweih.chatme.domain.ChatThread
 
 data class ThreadResponse(

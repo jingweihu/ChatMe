@@ -1,6 +1,7 @@
 package link.jingweih.chatme.database
 
 import androidx.room.*
+import kotlinx.coroutines.flow.Flow
 import link.jingweih.chatme.domain.ChatThread
 import link.jingweih.chatme.domain.ChatThreadParticipant
 import link.jingweih.chatme.domain.ChatThreadWithMembers
@@ -10,7 +11,7 @@ interface ThreadDao {
 
     @Transaction
     @Query("SELECT * FROM chatthread")
-    fun getThreadWithMembers(): List<ChatThreadWithMembers>
+    fun getThreadWithMembers(): Flow<List<ChatThreadWithMembers>>
 
 //    @Query("SELECT EXISTS(SELECT * FROM chatthreadparticipant WHERE thread_id = :threadId)")
 //    fun isThreadReady(threadId: String): Boolean

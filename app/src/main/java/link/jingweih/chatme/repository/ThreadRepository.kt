@@ -9,18 +9,18 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.suspendCancellableCoroutine
 import link.jingweih.chatme.database.ChatAppDatabase
 import link.jingweih.chatme.domain.ChatThreadParticipant
 import link.jingweih.chatme.domain.ChatThreadWithMembers
+import link.jingweih.chatme.domain.Profile
 import link.jingweih.chatme.responses.ThreadInfoResponse
 import link.jingweih.chatme.responses.ThreadResponse
 import link.jingweih.chatme.utils.GsonUtil
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
@@ -66,16 +66,16 @@ class ThreadRepository @Inject constructor(
         awaitClose { subscription.remove() }
     }
 
-    suspend fun getThreadInfo(thread: ThreadResponse): ThreadInfoResponse {
+    suspend fun getMemberInfo(threadId: String): List<Profile> {
         return suspendCancellableCoroutine { cont ->
             Firebase.functions.getHttpsCallable("getThreadInfo")
-                .call(hashMapOf("threadId" to thread.threadId))
+                .call(hashMapOf("threadId" to threadId))
                 .continueWith { task ->
                     val result = task.result?.data!!
                     val threadInfo = GsonUtil.toClass<ThreadInfoResponse>(
                         result
-                    ).copy(createAt = thread.createAt)
-                    cont.resume(threadInfo)
+                    )
+                    cont.resume(threadInfo.members)
                 }.addOnCompleteListener { task ->
                     val e = task.exception
                     if (e is FirebaseFunctionsException) {
@@ -86,7 +86,7 @@ class ThreadRepository @Inject constructor(
     }
 
     fun isThreadReady(threadId: String): Boolean {
-        val expiredTime = Date().time - TimeUnit.SECONDS.toMillis(10)
+        val expiredTime = Date().time - TimeUnit.HOURS.toMillis(1)
         return chatAppDatabase.threadDao().isThreadReady(expiredTime, threadId)
     }
 
@@ -94,19 +94,18 @@ class ThreadRepository @Inject constructor(
         chatAppDatabase.threadDao().insertChatThread(threadResponse.toDomainO())
     }
 
-    fun saveThreadInfo(threadInfoResponse: ThreadInfoResponse) {
-        val members = threadInfoResponse.members
+    fun saveThreadInfo(threadResponse: ThreadResponse, members: List<Profile>) {
         val profileDao = chatAppDatabase.profileDao()
         val threadDao = chatAppDatabase.threadDao()
         chatAppDatabase.runInTransaction {
-            threadDao.insertChatThread(threadInfoResponse.toDomainO())
+            threadDao.insertChatThread(threadResponse.toDomainO())
             if (members.isNotEmpty()) {
                 profileDao.insertProfile(members)
                 threadDao.insertThreadParticipants(
                     members.map {
                         ChatThreadParticipant(
                             uid = it.uid,
-                            threadId = threadInfoResponse.threadId
+                            threadId = threadResponse.threadId
                         )
                     }
                 )
@@ -114,17 +113,16 @@ class ThreadRepository @Inject constructor(
         }
     }
 
-    fun getChatThreadWithMembers(): List<ChatThreadWithMembers> {
+    fun getChatThreadWithMembers(): Flow<List<ChatThreadWithMembers>> {
         val uid = auth.currentUser!!.uid
-        return chatAppDatabase.threadDao().getThreadWithMembers().map {
-            val newMembers = it.members.map { profile ->
-                if (profile.uid == uid) {
-                    profile.copy(isYourself = true)
-                } else {
+        return chatAppDatabase.threadDao().getThreadWithMembers().map { thread ->
+            thread.map {
+                val newMembers = it.members.map { profile ->
+                    profile.isYourself = profile.uid == uid
                     profile
                 }
-            }
-            it.copy(members = newMembers)
+                it.copy(members = newMembers)
+            }.sortedByDescending { it.timestamp }
         }
     }
 }

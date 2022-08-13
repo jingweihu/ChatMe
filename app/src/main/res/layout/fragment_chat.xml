@@ -17,13 +17,13 @@
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/topAppBar"
-                style="@style/Widget.MaterialComponents.Toolbar.PrimarySurface"
+                android:background="@color/surface"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                app:navigationIcon="@drawable/ic_arrow_back_ios_24"
                 app:navigationIconTint="@color/white"
-                app:navigationIcon="@drawable/ic_baseline_close_24"
-                app:titleCentered="true"
-                app:title="@string/chat" />
+                app:title="@string/chat"
+                app:titleCentered="true" />
 
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -34,5 +34,26 @@
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:id="@+id/message_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="12dp"
+        android:background="@color/surface"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/text"
+            android:minHeight="40dp"
+            android:paddingHorizontal="8dp"
+            android:inputType="text"
+            android:background="@drawable/round_corner_shape"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionSend" />
+    </LinearLayout>
+
 </LinearLayout>

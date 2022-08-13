@@ -33,6 +33,6 @@ object DataModule {
         return Room.databaseBuilder(
             context,
             ChatAppDatabase::class.java, "chat-db"
-        ).build()
+        ).enableMultiInstanceInvalidation().build()
     }
 }

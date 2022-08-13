@@ -1,26 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    tools:context=".thread.create.CreateThreadFragment"
-    android:padding="@dimen/margin_16_dp">
+    android:background="@color/surface"
+    android:paddingHorizontal="12dp"
+    android:paddingVertical="12dp"
+    tools:context=".thread.create.CreateThreadFragment">
 
-    <androidx.appcompat.widget.AppCompatEditText
-        android:layout_width="match_parent"
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/searchEmail"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:id="@+id/friendEmail"
-        android:imeOptions="actionNext"
+        android:layout_marginEnd="12dp"
+        android:background="@drawable/round_corner_shape"
+        app:defaultQueryHint="@string/create_thread_hint"
+        android:minHeight="40dp"
         android:singleLine="true"
-        android:hint="@string/create_thread_hint"/>
+        app:iconifiedByDefault="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/submit"
-        android:background="@color/purple_500"
-        android:layout_width="match_parent"
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/submit"/>
+        android:id="@+id/error_message"
+        app:layout_constraintTop_toBottomOf="@id/searchEmail"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="12dp"
+        android:visibility="gone"
+        tools:text="Error"
+        tools:visibility="visible"
+        android:textColor="@color/alert"/>
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.constraintlayout.widget.ConstraintLayout>

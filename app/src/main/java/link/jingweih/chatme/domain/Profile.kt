@@ -4,16 +4,22 @@ import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
+import com.google.firebase.firestore.Exclude
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 
-@Parcelize
 @Entity
-data class Profile @JvmOverloads constructor (
-    val email: String,
-    val displayName: String?,
-    val photoURL: String?,
+@Parcelize
+data class Profile (
+    var email: String = "",
+    var displayName: String? = null,
+    var photoURL: String? = null,
     @PrimaryKey
-    val uid: String,
+    var uid: String = "",
+): Parcelable {
+
+    @IgnoredOnParcel
     @Ignore
-    val isYourself: Boolean = false
-): Parcelable
+    @get:Exclude
+    var isYourself: Boolean = false
+}

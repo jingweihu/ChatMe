@@ -2,9 +2,9 @@ package link.jingweih.chatme
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
-import androidx.navigation.ui.setupActionBarWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import link.jingweih.jingwei.core.framework.exts.setupWithNavController
@@ -51,6 +51,13 @@ class MainActivity : AppCompatActivity() {
 //            setupActionBarWithNavController(navController)
 //        }
         currentNavController = controller
+        controller.observe(this) {
+            it.addOnDestinationChangedListener { _, destination, _ ->
+                bottomNavigationView.isVisible =
+                    destination.id == R.id.accountFragment ||
+                            destination.id == R.id.threadsFragment
+            }
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

@@ -1,32 +1,37 @@
 package link.jingweih.chatme.repository
 
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.UserProfileChangeRequest
-import kotlinx.coroutines.suspendCancellableCoroutine
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import link.jingweih.chatme.database.ChatAppDatabase
+import link.jingweih.chatme.domain.Profile
 import javax.inject.Inject
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 
 
-class AccountRepository @Inject constructor(private val auth: FirebaseAuth,
-private val database: ChatAppDatabase) {
+class AccountRepository @Inject constructor(
+    private val auth: FirebaseAuth,
+    private val firestore: FirebaseFirestore,
+    private val database: ChatAppDatabase
+) {
 
-    suspend fun updateProfile(userProfileChangeRequest: UserProfileChangeRequest): FirebaseUser {
-        return suspendCancellableCoroutine { cont ->
-            auth.currentUser!!.updateProfile(userProfileChangeRequest)
-                .addOnSuccessListener {
-                    cont.resume(auth.currentUser!!)
-                }.addOnFailureListener {
-                    cont.resumeWithException(it)
-                }
+    @OptIn(ExperimentalCoroutinesApi::class)
+    fun getProfile(): Flow<Profile> = callbackFlow {
+        val uid = auth.currentUser!!.uid
+        val ref = firestore.collection("users").document(uid)
+        val subscription = ref.addSnapshotListener { snapshot, e ->
+            if (e != null) {
+                throw e
+            }
+            trySend(snapshot?.toObject(Profile::class.java)!!)
         }
+        awaitClose { subscription.remove() }
     }
 
     fun logout() {
         database.clearAllTables()
         auth.signOut()
     }
-
 }

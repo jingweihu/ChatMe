@@ -1,16 +1,14 @@
 package link.jingweih.chatme.responses
 
 import com.google.firebase.Timestamp
-import com.google.firebase.auth.FirebaseUser
 import link.jingweih.chatme.domain.ChatMessage
-import link.jingweih.chatme.domain.Profile
 
 data class MessageResponse(
-    val createAt: Timestamp,
-    val messageId: String,
-    val message: String,
-    val senderId: String,
-    val type: MessageType
+    var createAt: Timestamp? = null,
+    var messageId: String = "",
+    var message: String = "",
+    var senderId: String = "",
+    var type: MessageType = MessageType.MESSAGE
 ) {
 
     fun toDomainO(threadId: String): ChatMessage {
@@ -23,15 +21,4 @@ data class MessageResponse(
             type = type
         )
     }
-}
-
-
-fun FirebaseUser.toDomainO(isYourself: Boolean): Profile {
-    return Profile(
-        email = email ?: "",
-        displayName = displayName ?: "",
-        photoURL = photoUrl?.toString(),
-        uid = uid,
-        isYourself = isYourself
-    )
 }

@@ -28,7 +28,8 @@ class AccountFragment : BaseFragment<FragmentAccountBinding>() {
                 is AccountUiState.Success -> {
                     binding.displayName.setText(uiState.profile.displayName)
                     binding.email.text = uiState.profile.email
-                    Glide.with(this).load(uiState.profile.photoURL).into(binding.photoImage)
+                    Glide.with(this).load(uiState.profile.photoURL).fitCenter()
+                        .into(binding.photoImage)
                 }
                 is AccountUiState.Logout -> {
                     activity?.apply {
@@ -44,15 +45,6 @@ class AccountFragment : BaseFragment<FragmentAccountBinding>() {
     }
 
     override fun initView() {
-        binding.saveProfile.setOnClickListener {
-            val displayName = binding.displayName.text.toString()
-            if (displayName.isNotEmpty()) {
-                viewModel.saveProfile(
-                    displayName,
-                    "https://images.all-free-download.com/images/graphiclarge/vector_hatake_kakashi_avatar_179845.jpg"
-                )
-            }
-        }
 
         binding.logout.setOnClickListener {
             viewModel.logout()

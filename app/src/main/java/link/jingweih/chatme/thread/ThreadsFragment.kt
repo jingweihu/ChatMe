@@ -46,7 +46,6 @@ class ThreadsFragment : BaseFragment<FragmentThreadsBinding>() {
     }
 
     override fun initView() {
-        binding.topAppBar.inflateMenu(R.menu.chat_action_bar_menu)
         binding.topAppBar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.create_chat -> {
