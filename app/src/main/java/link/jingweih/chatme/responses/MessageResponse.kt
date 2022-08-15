@@ -4,7 +4,7 @@ import com.google.firebase.Timestamp
 import link.jingweih.chatme.domain.ChatMessage
 
 data class MessageResponse(
-    var createAt: Timestamp? = null,
+    var createAt: Timestamp = Timestamp.now(),
     var messageId: String = "",
     var message: String = "",
     var senderId: String = "",

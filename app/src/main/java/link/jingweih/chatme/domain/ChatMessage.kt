@@ -15,16 +15,16 @@ import link.jingweih.chatme.responses.MessageType
 @Parcelize
 data class ChatMessage(
     @ColumnInfo(name = "thread_id")
-    val threadId: String,
+    var threadId: String = "",
     @ColumnInfo(name = "message_id")
     var messageId: String = "",
     @ColumnInfo(name = "create_at")
-    val createAt: Timestamp? = null,
-    val message: String,
+    var createAt: Timestamp = Timestamp.now(),
+    val message: String = "",
     @ColumnInfo(name = "sender_id")
-    val senderId: String,
-    val type: MessageType
-): Parcelable {
+    var senderId: String = "",
+    var type: MessageType = MessageType.MESSAGE
+) : Parcelable {
 
     @IgnoredOnParcel
     @Ignore

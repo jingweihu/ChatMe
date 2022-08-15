@@ -18,7 +18,6 @@ data class Profile (
     var uid: String = "",
 ): Parcelable {
 
-    @IgnoredOnParcel
     @Ignore
     @get:Exclude
     var isYourself: Boolean = false

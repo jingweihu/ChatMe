@@ -1,6 +1,7 @@
 package link.jingweih.chatme.usecase
 
 import kotlinx.coroutines.CoroutineDispatcher
+import link.jingweih.chatme.domain.ChatThread
 import link.jingweih.chatme.domain.ChatThreadWithMembers
 import link.jingweih.chatme.repository.ChatRepository
 import link.jingweih.chatme.responses.MessageType
@@ -15,7 +16,7 @@ class SendMessageUseCase @Inject constructor(
     BaseUseCase<SendMessageInput, Boolean>(ioDispatcher) {
     override suspend fun execute(input: SendMessageInput): Boolean {
         return chatRepository.sendMessage(
-            threadInfo = input.chatThreadWithMembers,
+            chatThread = input.chatThread,
             message = input.message,
             type = input.type
         )
@@ -25,5 +26,5 @@ class SendMessageUseCase @Inject constructor(
 data class SendMessageInput(
     val message: String,
     val type: MessageType,
-    val chatThreadWithMembers: ChatThreadWithMembers
+    val chatThread: ChatThread
 )
